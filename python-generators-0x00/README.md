@@ -84,4 +84,13 @@ if connection:
 ## 📌 Notes
 - Ensure MySQL server is running and credentials in `seed.py` are valid
 - Place `user_data.csv` in the same directory as `seed.py`
-- run 0-main.py
+- run `0-main.py`
+
+---
+
+## 📦 Additional Files
+
+- `0-stream_users.py`: Streams users one by one
+   - Place `0-stream_users.py` in the same directory as `seed.py`
+   - Use `1-main.py` to test this file
+
