@@ -98,3 +98,7 @@ if connection:
    - Place `1-batch_processing.py` in the same directory as `seed.py`
    - Use `2-main.py` to test this file
 
+- `2-lazy_paginate.py`: Paginates users with lazy loading
+   - Place `2-lazy_paginate.py` in the same directory as `seed.py`
+   - Use `3-main.py` to test this file
+
