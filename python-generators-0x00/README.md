@@ -102,3 +102,6 @@ if connection:
    - Place `2-lazy_paginate.py` in the same directory as `seed.py`
    - Use `3-main.py` to test this file
 
+- `4-stream_ages.py`: Streams user ages and computes average
+   - Place `4-stream_ages.py` in the same directory as `seed.py`
+
