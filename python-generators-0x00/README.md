@@ -94,3 +94,7 @@ if connection:
    - Place `0-stream_users.py` in the same directory as `seed.py`
    - Use `1-main.py` to test this file
 
+- `1-batch_processing.py`: Processes users in batches
+   - Place `1-batch_processing.py` in the same directory as `seed.py`
+   - Use `2-main.py` to test this file
+
