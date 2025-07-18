@@ -1,65 +1,32 @@
-# 0x03. Unittests and Integration Tests
+# 0x03-Unittests_and_integration_tests
 
-## Description
+This directory contains solutions for the "Unittests and Integration Tests" project.
 
-This project focuses on writing **unit** and **integration tests** in Python. It involves testing utilities, mocking HTTP requests, and ensuring code correctness through automated tests using the `unittest` module, `parameterized`, and `unittest.mock`.
+## Task 0: Parameterize a unit test
 
----
+This task involves writing a parameterized unit test for the `utils.access_nested_map` function.
 
-## Learning Objectives
+### Files:
+- `utils.py`: Contains the `access_nested_map` function.
+- `test_utils.py`: Contains the `TestAccessNestedMap` class with the `test_access_nested_map` method.
 
-By the end of this project, you should be able to explain:
-
-- The difference between **unit tests** and **integration tests**
-- How and when to use:
-  - **Mocking**
-  - **Fixtures**
-  - **Parameterized tests**
-- How to use `unittest` effectively to write reliable and repeatable tests
-- Why test coverage and mocking external dependencies is important
-
----
-
-## Requirements
-
-- Python 3.7
-- Ubuntu 18.04 LTS
-- All code complies with `pycodestyle` (PEP8) version 2.5
-- All modules, classes, and functions contain full docstrings
-- All code is executable and ends with a new line
-- Type annotations are used in all functions and methods
-
----
-
-## File Structure
-
-```
-
-.
-├── client.py              # GithubOrgClient and related methods
-├── fixtures.py            # Fixtures for integration tests
-├── test\_client.py         # Unit tests for GithubOrgClient
-├── test\_utils.py          # Unit tests for utility functions
-├── utils.py               # Utility functions used by client.py
-└── README.md              # Project documentation
-
-```
-
----
-
-## How to Run Tests
-
-Run all tests:
-```bash
-python3 -m unittest discover
-```
-
-Run a specific test file:
-
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 ```bash
 python3 -m unittest test_utils.py
-python3 -m unittest test_client.py
 ```
+---
+## Task 1: Parameterize a unit test (Exception Handling)
 
+This task involves writing a parameterized unit test for the `utils.access_nested_map` function to test exception handling.
+
+### Files:
+- `test_utils.py`: Updated to include `test_access_nested_map_exception` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_utils.py
+```
 ---
 
