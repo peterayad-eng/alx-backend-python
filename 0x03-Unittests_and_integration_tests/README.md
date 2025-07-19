@@ -69,4 +69,17 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_client.py
 ```
 ---
+## Task 5: Mocking a property
+
+This task involves unit-testing `GithubOrgClient._public_repos_url` by mocking `GithubOrgClient.org`.
+
+### Files:
+- `test_client.py`: Updated to include `test_public_repos_url` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
