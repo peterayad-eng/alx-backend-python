@@ -29,4 +29,17 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_utils.py
 ```
 ---
+## Task 2: Mock HTTP Calls
+
+This task involves writing a unit test for the `utils.get_json` function using mocking to avoid actual HTTP calls.
+
+### Files:
+- `test_utils.py`: Updated to include `TestGetJson` class with `test_get_json` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_utils.py
+```
+---
 
