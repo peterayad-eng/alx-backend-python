@@ -70,14 +70,14 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
+        # Create an instance of TestClass
+        obj = TestClass()
+        
         # Mock the a_method
-        with patch.object(TestClass ,'a_method', return_value=42) as mock_method:
-            # Create an instance of TestClass
-            test_instance = TestClass()
-
+        with patch.object(obj, 'a_method', return_value=42) as mock_method:
             # Call a_property twice
-            result1 = test_instance.a_property
-            result2 = test_instance.a_property
+            result1 = obj.a_property
+            result2 = obj.a_property
 
             # Test that both calls return the correct result
             self.assertEqual(result1, 42)
