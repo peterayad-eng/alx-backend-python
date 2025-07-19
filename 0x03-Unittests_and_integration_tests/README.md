@@ -55,4 +55,18 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_utils.py
 ```
 ---
+## Task 4: Parameterize and Patch as Decorators
+
+This task involves testing the `GithubOrgClient.org` method using `@patch` and `@parameterized.expand` decorators.
+
+### Files:
+- `client.py`: Contains the `GithubOrgClient` class.
+- `test_client.py`: Contains the `TestGithubOrgClient` class with `test_org` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
