@@ -42,4 +42,17 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_utils.py
 ```
 ---
+## Task 3: Parameterize and Patch
+
+This task involves testing the `utils.memoize` decorator using mocking.
+
+### Files:
+- `test_utils.py`: Updated to include `TestMemoize` class with `test_memoize` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_utils.py
+```
+---
 
