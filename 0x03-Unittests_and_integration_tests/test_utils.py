@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json, memoize
+from utils import access_nested_map, get_json, 
 from unittest.mock import patch, Mock
+
 
 class TestAccessNestedMap(unittest.TestCase):
     """Tests the access_nested_map function.
@@ -27,6 +28,7 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
         self.assertEqual(str(context.exception), f"'{expected_key}'")
+
 
 class TestGetJson(unittest.TestCase):
     """Tests the get_json function.
@@ -53,6 +55,7 @@ class TestGetJson(unittest.TestCase):
         # Test that the output of get_json is equal to test_payload
         self.assertEqual(result, test_payload)
 
+
 class TestMemoize(unittest.TestCase):
     """Tests the memoize decorator.
     """
@@ -68,7 +71,7 @@ class TestMemoize(unittest.TestCase):
                 return self.a_method()
 
         # Mock the a_method
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+        with patch.object(TestClass,'a_method',return_value=42) as mock_method:
             # Create an instance of TestClass
             test_instance = TestClass()
 
@@ -82,4 +85,3 @@ class TestMemoize(unittest.TestCase):
 
             # Test that a_method was called only once
             mock_method.assert_called_once()
-
