@@ -82,4 +82,17 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_client.py
 ```
 ---
+## Task 6: More Patching
+
+This task involves unit-testing `GithubOrgClient.public_repos` using both `@patch` decorator and `patch` context manager.
+
+### Files:
+- `test_client.py`: Updated to include `test_public_repos` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
