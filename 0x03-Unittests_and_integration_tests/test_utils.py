@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json, 
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
 
 
@@ -71,7 +71,7 @@ class TestMemoize(unittest.TestCase):
                 return self.a_method()
 
         # Mock the a_method
-        with patch.object(TestClass,'a_method',return_value=42) as mock_method:
+        with patch.object(TestClass ,'a_method', return_value=42) as mock_method:
             # Create an instance of TestClass
             test_instance = TestClass()
 
