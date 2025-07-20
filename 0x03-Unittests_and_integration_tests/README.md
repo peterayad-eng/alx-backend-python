@@ -122,4 +122,18 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_client.py
 ```
 ---
+## Task 9: Integration Tests
+
+This task involves implementing the `test_public_repos` method to test `GithubOrgClient.public_repos`, and Implementing `test_public_repos_with_license` method to test the public_repos with the argument license=`apache-2.0` making sure the result matches the expected value from the fixtures.
+
+### Files:
+- `fixtures.py`: Contains the test data fixtures.
+- `test_client.py`: Updated to include `test_public_repos`, and `test_public_repos_with_license` methods.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
