@@ -4,59 +4,45 @@ from django.db import models
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
+
+# Custom User model extending AbstractUser
 class User(AbstractUser):
-    """Custom User model extending Django's AbstractUser"""
-    ROLE_CHOICES = [
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    
+    ROLE_CHOICES = (
         ('guest', 'Guest'),
         ('host', 'Host'),
         ('admin', 'Admin'),
-    ]
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='guest')
+    created_at = models.DateTimeField(default=timezone.now)
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=150, null=False)
-    last_name = models.CharField(max_length=150, null=False)
-    email = models.EmailField(unique=True, null=False)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    # Remove username field (using email instead)
-    username = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']  # username is required by AbstractUser
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.email})"
+        return f'{self.email}'
+
 
 class Conversation(models.Model):
-    """Model representing a conversation between users"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participants = models.ManyToManyField(User, related_name='conversations')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Conversation {self.id}"
+        return f'Conversation {self.conversation_id}'
+
 
 class Message(models.Model):
-    """Model representing a message in a conversation"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='sent_messages'
-    )
-    conversation = models.ForeignKey(
-        Conversation,
-        on_delete=models.CASCADE,
-        related_name='messages'
-    )
-    body = models.TextField(null=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-sent_at']
+    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    message_body = models.TextField()
+    sent_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Message from {self.sender.email} at {self.sent_at}"
+        return f'Message from {self.sender.email} at {self.sent_at}'
