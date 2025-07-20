@@ -95,4 +95,17 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_client.py
 ```
 ---
+## Task 7: Parameterize (has_license)
+
+This task involves unit-testing `GithubOrgClient.has_license` using `@parameterized.expand`.
+
+### Files:
+- `test_client.py`: Updated to include `test_has_license` method.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
