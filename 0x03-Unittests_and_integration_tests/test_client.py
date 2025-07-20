@@ -34,12 +34,12 @@ class TestGithubOrgClient(unittest.TestCase):
             new_callable=unittest.mock.PropertyMock
         ) as mock_org:
             mock_org.return_value = {
-                "repos_url": https://api.github.com/orgs/google/repos
+                "repos_url": "https://api.github.com/orgs/google/repos"
             }
             client = GithubOrgClient("google")
             self.assertEqual(
                 client._public_repos_url,
-                https://api.github.com/orgs/google/repos
+                "https://api.github.com/orgs/google/repos"
             )
             # Ensure the `org` property was accessed once
             mock_org.assert_called_once()
@@ -54,9 +54,9 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.return_value = test_payload
 
             with patch(
-                    'client.GithubOrgClient._public_repos_url', 
-                    new_callable=PropertyMock, 
-                    return_value=https://api.github.com/orgs/testorg/repos
+                    'client.GithubOrgClient._public_repos_url',
+                    new_callable=PropertyMock,
+                    return_value="https://api.github.com/orgs/testorg/repos"
             ) as mock_url:
                 client = GithubOrgClient("testorg")
                 repos = client.public_repos()
