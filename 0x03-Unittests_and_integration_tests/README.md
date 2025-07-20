@@ -108,4 +108,18 @@ Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
 python3 -m unittest test_client.py
 ```
 ---
+## Task 8: Integration Test Fixtures
+
+This task involves implementing integration tests for `GithubOrgClient.public_repos` using `setUpClass` and `tearDownClass` to mock `requests.get`.
+
+### Files:
+- `fixtures.py`: Contains the test data fixtures.
+- `test_client.py`: Updated to include `TestIntegrationGithubOrgClient` class with integration tests.
+
+### How to run the tests:
+Navigate to the `0x03-Unittests_and_integration_tests` directory and run:
+```bash
+python3 -m unittest test_client.py
+```
+---
 
