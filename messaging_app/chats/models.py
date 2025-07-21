@@ -1,34 +1,41 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 
-class User(AbstractUser):
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
+# Create your models here.
 
+class User(AbstractUser):
+    """Custom User model extending Django's AbstractUser"""
     ROLE_CHOICES = [
         ('guest', 'Guest'),
         ('host', 'Host'),
         ('admin', 'Admin'),
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
-    password_hash = models.CharField(max_length=128)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    first_name = models.CharField(max_length=150, null=False)
+    last_name = models.CharField(max_length=150, null=False)
+    email = models.EmailField(unique=True, null=False)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    password = models.CharField(max_length=128)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'role']
+    # Remove username field (using email instead)
+    username = None
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
 
-    def save(self, *args, **kwargs):
-        # Update password_hash with the actual password hash value
-        self.password_hash = self.password
-        super().save(*args, **kwargs)
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.email})"
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participants = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Conversation {self.conversation_id}'
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -36,3 +43,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     message_body = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.sender.email} at {self.sent_at}'
+
