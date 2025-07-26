@@ -1,9 +1,12 @@
 from rest_framework import viewsets, permissions, status, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+from .filters import MessageFilter
+from .pagination import MessagePagination
 from django.shortcuts import get_object_or_404
 from .permissions import IsParticipantOfConversation
 
@@ -44,6 +47,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
+    pagination_class = MessagePagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body']
     lookup_url_kwarg = 'message_id'
