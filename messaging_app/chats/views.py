@@ -4,24 +4,24 @@ from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from django.shortcuts import get_object_or_404
+from .permissions import IsParticipantOfConversation
 
 # Create your views here.
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [filters.SearchFilter]
     search_fields = ['participants__email']
 
     def get_queryset(self):
+        """Automatically add current user as participant when creating conversation"""
         return self.request.user.conversations.all()
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def create(self, serializer):
+        """Automatically add current user as participant when creating conversation"""
+        conversation = serializer.save()
+        conversation.participants.add(self.request.user)
 
     @action(detail=True, methods=['post'])
     def send_message(self, request, pk=None):
@@ -36,7 +36,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body']
 
