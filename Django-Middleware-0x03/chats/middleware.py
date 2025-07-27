@@ -1,11 +1,13 @@
 import logging
 from datetime import datetime
 
+logger = logging.getLogger(__name__)
+
 class RequestLoggingMiddleware:
     """Middleware to log user requests"""
-    def __init__(self, get_response =None):
-        super().__init__(get_response)
-        # Configure file logging
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # Configure logging
         logging.basicConfig(
             filename='requests.log',
             level=logging.INFO,
