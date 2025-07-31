@@ -9,10 +9,27 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
     last_edited = models.DateTimeField(null=True, blank=True)
+    parent_message = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies'
+    )
 
+    class Meta:
+        ordering = ['-timestamp']  # Newest messages first
 
     def __str__(self):
         return f'Message from {self.sender} to {self.receiver}'
+
+    def get_thread(self):
+        """Recursively fetches all replies in a thread"""
+        thread = []
+        for reply in self.replies.all().select_related('sender', 'receiver'):
+            thread.append(reply)
+            thread.extend(reply.get_thread())
+        return thread
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
