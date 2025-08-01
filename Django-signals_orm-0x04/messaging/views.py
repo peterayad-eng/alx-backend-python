@@ -37,6 +37,9 @@ def conversation_list(request, user_id):
     conversations = Message.objects.filter(
         models.Q(sender=request.user) | models.Q(receiver=request.user),
         parent_message__isnull=True  # Only top-level messages
+        ).only(  # Added .only() for optimization
+        'id', 'content', 'timestamp',
+        'sender__username', 'receiver__username'
     ).select_related('sender', 'receiver').prefetch_related('replies')
 
     return render(request, 'messaging/conversations.html', {
@@ -46,7 +49,7 @@ def conversation_list(request, user_id):
 @login_required
 def unread_messages(request):
     """View showing only unread messages using custom manager"""
-    unread_msgs = Message.unread.for_user(request.user)
+    unread_msgs = Message.unread.unread_for_user(request.user)
     
     return render(request, 'messaging/unread.html', {
         'messages': unread_msgs
