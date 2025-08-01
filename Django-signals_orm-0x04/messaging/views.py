@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
 from .models import Message
@@ -32,6 +33,8 @@ def thread_view(request, message_id):
         'thread': thread
     })
 
+@cache_page(60)
+@login_required
 def conversation_list(request, user_id):
     """Lists all conversations with the user (top-level messages only)"""
     conversations = Message.objects.filter(
