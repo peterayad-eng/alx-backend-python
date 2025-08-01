@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
+from .models import Message
+from django.contrib import messages as django_messages
 
 # Create your views here.
 User = get_user_model()
@@ -40,4 +42,20 @@ def conversation_list(request, user_id):
     return render(request, 'messaging/conversations.html', {
         'conversations': conversations
     })
+
+@login_required
+def unread_messages(request):
+    """View showing only unread messages using custom manager"""
+    unread_msgs = Message.unread.for_user(request.user)
+    
+    return render(request, 'messaging/unread.html', {
+        'messages': unread_msgs
+    })
+
+@login_required
+def mark_as_read(request, message_id):
+    msg = get_object_or_404(Message, pk=message_id, receiver=request.user)
+    msg.mark_as_read()
+    django_messages.success(request, "Message marked as read")
+    return redirect('unread_messages')
 
