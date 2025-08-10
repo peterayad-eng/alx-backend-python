@@ -8,6 +8,7 @@ services:
     environment:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
+      MYSQL_DB: messaging_db
       MYSQL_DATABASE: messaging_db
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
@@ -19,13 +20,13 @@ services:
     build: .
     container_name: messaging_web
     restart: always
-    # python3 manage.py runserver
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     environment:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
+      MYSQL_DB: messaging_db
       MYSQL_DATABASE: messaging_db
       DB_HOST: db
       DB_PORT: 3306
