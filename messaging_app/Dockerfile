@@ -18,7 +18,7 @@ RUN pip install -r requirements.txt
 # Copy the rest of the app code
 COPY . /app/
 
-# Expose Django's default port
+# Expose Django's default port -p
 EXPOSE 8000
 
 # Run the Django development server
