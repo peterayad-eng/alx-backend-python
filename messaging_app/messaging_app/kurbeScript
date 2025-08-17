@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Ensure minikube is installed
+if ! command -v minikube &> /dev/null; then
+    echo "Minikube not found. Installing..."
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+else
+    echo "Minikube is already installed."
+fi
+
+# Ensure kubectl is installed
+if ! command -v kubectl &> /dev/null; then
+    echo "kubectl not found. Installing..."
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    sudo apt-get update && sudo apt-get install -y conntrack
+
+    VERSION="v1.30.0"
+    curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
+    sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
+    rm -f crictl-$VERSION-linux-amd64.tar.gz
+else
+    echo "kubectl is already installed."
+fi
+
+# Start Kubernetes cluster
+echo "Starting Kubernetes cluster..."
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Running as root: using --driver=none"
+    minikube start --driver=none
+else
+    minikube start --driver=docker
+fi
+
+# Verify cluster status
+echo -e "\nCluster Info:"
+kubectl cluster-info
+
+# List available pods
+echo -e "\nAvailable Pods:"
+kubectl get pods -A
+
+# Print dashboard URL (bonus)
+echo -e "\nKubernetes Dashboard URL:"
+minikube dashboard --url
+
