@@ -1,0 +1,61 @@
+#!/bin/bash
+# Script to scale Django app on Kubernetes and test performance
+
+set -e
+
+DEPLOYMENT_NAME="django-messaging-app"
+NAMESPACE="default"
+SERVICE_PORT=8000
+
+# Validate deployment exists
+if ! kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE &> /dev/null; then
+    echo "❌ Deployment $DEPLOYMENT_NAME not found in namespace $NAMESPACE"
+    exit 1
+fi
+
+echo -e "\n🚀 Scaling $DEPLOYMENT_NAME to 3 replicas..."
+kubectl scale deployment $DEPLOYMENT_NAME --replicas=3 -n $NAMESPACE
+
+echo -e "\n✅ Verifying pods..."
+kubectl get pods -l app=messaging-app -o wide -n $NAMESPACE
+
+echo -e "\n⏳ Waiting for pods to become ready (timeout 2m)..."
+kubectl wait --for=condition=available \
+    deployment/$DEPLOYMENT_NAME \
+    --timeout=120s \
+    -n $NAMESPACE
+
+# Port-forwarding setup
+POD_NAME=$(kubectl get pod -l app=messaging-app \
+    -o jsonpath="{.items[0].metadata.name}" \
+    -n $NAMESPACE)
+
+echo -e "\n🔗 Port-forwarding $POD_NAME to localhost:$SERVICE_PORT..."
+kubectl port-forward $POD_NAME $SERVICE_PORT:$SERVICE_PORT -n $NAMESPACE &
+PF_PID=$!
+trap "kill $PF_PID" EXIT  # Ensure cleanup on script exit
+
+sleep 5  # Allow port-forward to stabilize
+
+# Load testing
+echo -e "\n⚡ Running load test..."
+if command -v wrk &> /dev/null; then
+    wrk -t$(nproc) -c100 -d30s --latency \
+        http://127.0.0.1:$SERVICE_PORT/health-check/ || true
+else
+    echo "⚠️ wrk not installed. Install with:"
+    echo "  Ubuntu: sudo apt install wrk"
+    echo "  MacOS: brew install wrk"
+fi
+
+# Metrics
+echo -e "\n📊 Resource usage:"
+if kubectl top nodes &> /dev/null; then
+    kubectl top pods -n $NAMESPACE
+else
+    echo "Metrics server not available. Enable with:"
+    echo "  minikube addons enable metrics-server"
+fi
+
+echo -e "\n🎉 Scaling test completed successfully!"
+
