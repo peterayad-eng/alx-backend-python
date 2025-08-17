@@ -1,0 +1,17 @@
+# Install NGINX Ingress Controller
+minikube addons enable ingress
+
+# Verify installation
+kubectl get pods -n ingress-nginx
+
+# Apply Ingress configuration
+kubectl apply -f ingress.yaml
+
+# Check Ingress status
+kubectl get ingress
+
+# For Minikube, get the external IP
+minikube ip
+# Add to /etc/hosts:
+# <minikube-ip> messaging.local
+
