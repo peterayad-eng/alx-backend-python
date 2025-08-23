@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+	// These will be set up as credentials in Jenkins
         GITHUB_CREDENTIALS = credentials('github-credentials')
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
     }
@@ -9,6 +10,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+		// Checkout code from GitHub using credentials
+		// git branch
                 git(
                     url: 'https://github.com/peterayad-eng/alx-backend-python.git',
                     credentialsId: 'github-credentials',
@@ -21,6 +24,7 @@ pipeline {
 
         stage('Setup Python') {
             steps {
+		// pip3 install
                 sh '''
                 python3 -m venv venv
                 . venv/bin/activate
@@ -40,6 +44,7 @@ pipeline {
             }
             post {
                 always {
+                    // Publish test results
                     junit 'messaging_app/test-results.xml'
                     publishHTML([
                         allowMissing: true,
@@ -57,6 +62,7 @@ pipeline {
 
     post {
         always {
+            // Clean up workspace
             cleanWs()
         }
     }
