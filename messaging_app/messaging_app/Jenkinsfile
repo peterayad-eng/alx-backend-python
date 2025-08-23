@@ -5,6 +5,7 @@ pipeline {
 	// These will be set up as credentials in Jenkins
         GITHUB_CREDENTIALS = credentials('github-credentials')
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+	DOCKER_IMAGE = "messaging_app"
     }
 
     stages {
@@ -55,6 +56,30 @@ pipeline {
                         reportName: 'Coverage Report',
                         reportTitles: ''
                     ])
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                cd messaging_app
+                docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .
+                '''
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
+                                                 usernameVariable: 'DOCKER_USER',
+                                                 passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push $DOCKER_IMAGE:$BUILD_NUMBER
+                    docker tag $DOCKER_IMAGE:$BUILD_NUMBER $DOCKER_IMAGE:latest
+                    docker push $DOCKER_IMAGE:latest
+                    '''
                 }
             }
         }
