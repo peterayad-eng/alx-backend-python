@@ -1,4 +1,4 @@
-name: CI - Django Tests
+name: CI - Django Tests & Code Quality
 
 on:
   push:
@@ -48,6 +48,13 @@ jobs:
           . venv/bin/activate
           pip install --upgrade pip
           pip install -r messaging_app/requirements.txt
+          pip install flake8 pytest-cov
+
+      - name: Run Linting (flake8)
+        run: |
+          . venv/bin/activate
+          cd messaging_app
+          flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Run Django Migrations
         run: |
@@ -59,7 +66,7 @@ jobs:
         run: |
           . venv/bin/activate
           cd messaging_app
-          pytest --ds=messaging_app.settings --junitxml=pytest-results.xml --cov=. --cov-report=xml --cov-report=term
+          pytest --ds=messaging_app.settings --junitxml=pytest-results.xml --cov=. --cov-report=xml --cov-report=html:htmlcov
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
@@ -67,8 +74,14 @@ jobs:
           name: pytest-results
           path: messaging_app/pytest-results.xml
 
-      - name: Upload Coverage Report
+      - name: Upload Coverage XML
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: messaging_app/coverage.xml
+
+      - name: Upload Coverage HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: messaging_app/htmlcov
